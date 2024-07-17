@@ -1,0 +1,2 @@
+ansible all -i <IP ADDRESS>, -u <USERNAME> --ask-pass -m ansible.builtin.setup --tree /tmp/facts
+

@@ -1,0 +1,46 @@
+---
+- name: Setup Docker Compose project
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - docker.io
+          - docker-compose
+        state: present
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Clone GitHub repository
+      git:
+        repo: 'https://github.com/auerlg/uds.git'
+        dest: /opt/uds
+
+    - name: Change permissions for the cloned directory
+      file:
+        path: /opt/uds
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+
+    - name: Ensure Docker service is started
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Run Docker Compose up
+      command: docker-compose up -d
+      args:
+        chdir: /opt/uds
