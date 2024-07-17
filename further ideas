@@ -1,0 +1,6 @@
+Playbook:
+1. Generate docker-runner user automatically which has no sudo rights but rund the container
+2Turn off password authentication for the server
+
+Server security:
+1.add fail2ban
